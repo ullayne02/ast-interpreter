@@ -15,6 +15,7 @@ class Main {
 		System.out.println("MaxArgs print1234: " + maxArgs.visit(Prog.print1234));
 		System.out.println("MaxArgs prog3: " + maxArgs.visit(Prog.prog3));
 		System.out.println("MaxArgs print: " + maxArgs.visit(Prog.print));
+		System.out.println("MaxArgs prog5: " + maxArgs.visit(Prog.prog5));
 
 
 		//interpretar programas(Prog.prog...);
@@ -39,5 +40,15 @@ class Main {
 		t = interpreter.visit(Prog.printPrint);
 		if (t!=null) System.out.println(t.toString());
 		System.out.println("===================================");		
+		System.out.println("Prog.prog3");
+		interpreter = new Interpreter(null);
+		t = interpreter.visit(Prog.prog3);
+		if (t!=null) System.out.println(t.toString());
+		System.out.println("===================================");
+		System.out.println("Prog.prog5");
+		interpreter = new Interpreter(null);
+		t = interpreter.visit(Prog.prog5);
+		if (t!=null) System.out.println(t.toString());
+		System.out.println("===================================");
 	}
 }

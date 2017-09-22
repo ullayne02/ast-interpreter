@@ -24,90 +24,93 @@ public class IntAndTableVisitor implements IVisitor<IntAndTable> {
 
 	@Override
 	public IntAndTable visit(Stm s) {
-		if(s instanceof AssignStm) {
-			return visit((AssignStm)s);
-		}else if (s instanceof CompoundStm) {
-			return visit((CompoundStm)s);
-		}else {
-			return visit((PrintStm)s);			
-		}
+		return null;
 	}
 
 	@Override
 	public IntAndTable visit(AssignStm s) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IntAndTable visit(CompoundStm s) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IntAndTable visit(PrintStm s) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IntAndTable visit(Exp e) {
-		if (e instanceof IdExp) {
-			return visit((IdExp)e);
-		}else if(e instanceof OpExp) {
-			return visit((OpExp)e);
-		}else if (e instanceof NumExp) {
-			return visit((NumExp)e);
-		}else {
-			return visit((EseqExp)e);
-		}
+		IntAndTable aux = e.accept(this); 
+		return aux;
 	}
 
 	@Override
 	public IntAndTable visit(EseqExp e) {
-		// TODO Auto-generated method stub
-		return null;
+		Interpreter inter = new Interpreter(this.t);
+		Table aux = inter.visit(e.getStm());
+		this.t = aux;
+		IntAndTable tb = e.getExp().accept(this);
+		return tb;
 	}
 
 	@Override
 	public IntAndTable visit(IdExp e) {
-		// TODO Auto-generated method stub
-		return null;
+		int value = findValue(e.getId(),this.t);
+		IntAndTable aux = new IntAndTable(value,this.t);
+		return aux;
 	}
 
 	@Override
 	public IntAndTable visit(NumExp e) {
-		IntAndTable retorno = new IntAndTable(e.getNum(),t); 
-		return retorno;
+		IntAndTable aux = new IntAndTable(e.getNum(),this.t);
+		return aux;
 	}
 
 	@Override
 	public IntAndTable visit(OpExp e) {
-		// TODO Auto-generated method stub
-		return null;
+		int left = e.getLeft().accept(this).result, result;
+		IntAndTable right = e.getRight().accept(this);
+		if(e.getOper()== 1) {
+			result = left+right.result;
+		} else if(e.getOper()== 2) {
+			result = left-right.result;
+		} else if(e.getOper()== 3) {
+			result = left*right.result;
+		} else {
+			result = left/right.result;
+		}
+		IntAndTable aux = new IntAndTable(result,right.table);
+		return aux;
 	}
 
 	@Override
 	public IntAndTable visit(ExpList el) {
-		if(el instanceof PairExpList) {
-			return visit((PairExpList)el);
-		}else {
-			return visit((LastExpList)el);
-		}
+		return null;
 	}
 
 	@Override
 	public IntAndTable visit(PairExpList el) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public IntAndTable visit(LastExpList el) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
-
+	
+	/**  Metodo que retorna o valor da tabela que possui o identificador "id" */
+	public Integer findValue(String id, Table tb) {
+		Table aux = tb.tail; 
+		while(aux!=null) {
+			if (!aux.id.equals(id)) {
+				aux = aux.tail; 
+			}
+		}
+		if(tb.id==id) return tb.value; 
+		return null;
+	}
 }

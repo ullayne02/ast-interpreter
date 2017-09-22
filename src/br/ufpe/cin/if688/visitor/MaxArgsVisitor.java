@@ -28,78 +28,65 @@ public class MaxArgsVisitor implements IVisitor<Integer> {
 
 	@Override
 	public Integer visit(AssignStm s) {
-		// TODO Auto-generated method stub
 		Exp aux = s.getExp(); 
 		if (aux instanceof EseqExp) {
 			Stm aux1 = ((EseqExp) s.getExp()).getStm();
 			return aux1.accept(this);
-			
 		}
 		return 0;
 	}
 
 	@Override
 	public Integer visit(CompoundStm s) {
-		// TODO Auto-generated method stub
 		int a, b; 
 		a = b = 0; 
-		
 		Stm stm1 = s.getStm1();
 		Stm stm2 = s.getStm2();
 		a = stm1.accept(this); 
 		b = stm2.accept(this); 
-		
 		int m = Math.max(a,b);
-		
 		return m;
-		
+
 	}
 
 	@Override
 	public Integer visit(PrintStm s) {
 		int retorno = 0;
 		ExpList aux = s.getExps(); 
-		
-		if(aux instanceof LastExpList) {
-			return aux.accept(this);
-		}else if (aux instanceof PairExpList){
-			int a = ((PairExpList) aux).getHead().accept(this);
-			int b = ((PairExpList) aux).getTail().accept(this);
-			int m = Math.max(a, b);
-			return m;
+		/** laco para contar a quantidade de argumentos passados no print */
+		while(aux instanceof PairExpList) {
+			retorno++; 
+			aux = ((PairExpList) aux).getTail(); 
 		}
-		return null;
+		if (aux instanceof LastExpList) {
+			retorno++; 
+		}
+
+		return Math.max(retorno, s.getExps().accept(this));
 	}
 
 	@Override
 	public Integer visit(Exp e) {
-		if (e instanceof IdExp) {
-			return visit((IdExp)e);
-		}else if(e instanceof OpExp) {
-			return visit((OpExp)e);
-		}else if (e instanceof NumExp) {
-			return visit((NumExp)e);
-		}else {
-			return visit((EseqExp)e);
-		}
+		return e.accept(this);
 	}
 
 	@Override
 	public Integer visit(EseqExp e) {
 		Stm stm = e.getStm();
 		Exp exp = e.getExp();
-		return stm.accept(this) + exp.accept(this);
+		int a = stm.accept(this); 
+		int b = exp.accept(this); 
+		return Math.max(a,b);
 	}
 
 	@Override
 	public Integer visit(IdExp e) {
-		// TODO Auto-generated method stub
-		return 1;
+		return 0;
 	}
 
 	@Override
 	public Integer visit(NumExp e) {
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -107,7 +94,10 @@ public class MaxArgsVisitor implements IVisitor<Integer> {
 		Exp left,right; 
 		left = e.getLeft();
 		right = e.getRight(); 
-		return e.getLeft().accept(this) + e.getRight().accept(this);
+		int a,b; 
+		a = e.getLeft().accept(this); 
+		b =  e.getRight().accept(this); 
+		return Math.max(a,b);
 	}
 
 	@Override
@@ -125,13 +115,16 @@ public class MaxArgsVisitor implements IVisitor<Integer> {
 		// TODO Auto-generated method stub
 		Exp head = el.getHead();
 		ExpList tail = el.getTail();
-		return head.accept(this) + tail.accept(this);
+		int a, b; 
+		a = head.accept(this);
+		b =  tail.accept(this);
+		return Math.max(a,b);
 	}
 
 	@Override
 	public Integer visit(LastExpList el) {
-		return el.getHead().accept(this); 
+		return Math.max(1, el.getHead().accept(this)); 
 	}
-	
+
 
 }

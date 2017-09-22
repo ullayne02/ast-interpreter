@@ -9,4 +9,14 @@ public class Table {
 		value = v;
 		tail = t;
 	}
+	public String toString() {
+		String result = id+"="+value+" ==> ";
+		Table aux = tail;
+		while(aux!=null) {
+			result += aux.id+"="+aux.value+" ==> ";
+			aux = aux.tail;
+		}
+		result += "Nil";
+		return result;
+	}
 }

@@ -121,4 +121,34 @@ class Prog {
 							)
 					)
 			);
+	
+    static Stm prog5 = new PrintStm(
+            new PairExpList(
+                new EseqExp(
+                        print1234,
+                        new NumExp(5)
+                ),
+                new PairExpList(
+                    new NumExp(6),
+                    new PairExpList(
+                            new NumExp(7),
+                            new PairExpList(
+                                    new NumExp(8),
+                                    new PairExpList(
+                                            new NumExp(9),
+                                            new PairExpList(
+                                                    new NumExp(10),
+                                                    new LastExpList(
+                                                            new EseqExp(
+                                                                    print1234,
+                                                                    new NumExp(11)
+                                                            )
+                                                    )
+                                            )
+                                    )
+                            )
+                    )
+                )
+            )
+);
 }
